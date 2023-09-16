@@ -47,7 +47,7 @@
   // MutationObserver to enable dark mode the moment the body element is
   // added. This minimizes the time spent in light mode and (ideally) makes it
   // appear as if the page was in dark mode from the start.
-  new MutationObserver((mutationList, observer) => {
+  new MutationObserver(function(mutationList, observer) {
     for (const mutation of mutationList) {
       for (const node of mutation.addedNodes) {
         // Enable dark mode if the node is the body element.
