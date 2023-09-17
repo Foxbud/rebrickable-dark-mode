@@ -15,16 +15,8 @@
 
   // Callback function to enable dark mode on a given body element.
   function enableDarkMode(body) {
-    // Dark mode CSS class.
-    const darkModeClass = "dark-mode";
-
-    // If body is already in dark mode, then nothing to do.
-    if (body.classList.contains(darkModeClass)) {
-      return;
-    }
-
     // Apply dark mode CSS to body.
-    body.classList.add(darkModeClass);
+    body.classList.add('dark-mode');
 
     // Update state of dark mode toggle switch for consistency if it exists.
     const checkbox = body.querySelector('.js-toggle-dark-mode input');
