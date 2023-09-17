@@ -52,7 +52,7 @@
         }
       }
     }
-  }).observe(document.lastChild /* Root html node. */, {
+  }).observe(document.documentElement /* Root html node. */, {
     // Only interested in modifications to immediate child list,
     // not attributes or sub-children.
     attributes: false,
