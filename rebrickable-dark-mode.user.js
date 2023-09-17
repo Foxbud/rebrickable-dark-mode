@@ -46,7 +46,7 @@
         if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BODY') {
           enableDarkMode(node);
 
-          // Observer has served it purpose, so disconnect it.
+          // Observer has served its purpose, so disconnect it.
           observer.disconnect();
           return;
         }
