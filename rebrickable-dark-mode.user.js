@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rebrickable Dark Mode
 // @namespace    https://fairburn.dev/
-// @version      1.2
+// @version      1.3
 // @description  Enable dark mode on Rebrickable regardless of your account plan.
 // @author       Garrett Fairburn
 // @license      Apache-2.0
@@ -15,16 +15,8 @@
 
   // Callback function to enable dark mode on a given body element.
   function enableDarkMode(body) {
-    // Dark mode CSS class.
-    const darkModeClass = "dark-mode";
-
-    // If body is already in dark mode, then nothing to do.
-    if (body.classList.contains(darkModeClass)) {
-      return;
-    }
-
     // Apply dark mode CSS to body.
-    body.classList.add(darkModeClass);
+    body.classList.add('dark-mode');
 
     // Update state of dark mode toggle switch for consistency if it exists.
     const checkbox = body.querySelector('.js-toggle-dark-mode input');
@@ -54,13 +46,13 @@
         if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BODY') {
           enableDarkMode(node);
 
-          // Observer has served it purpose, so disconnect it.
+          // Observer has served its purpose, so disconnect it.
           observer.disconnect();
           return;
         }
       }
     }
-  }).observe(document.lastChild /* Root html node. */, {
+  }).observe(document.documentElement /* Root html node. */, {
     // Only interested in modifications to immediate child list,
     // not attributes or sub-children.
     attributes: false,
