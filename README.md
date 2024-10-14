@@ -1,6 +1,6 @@
 # Rebrickable Dark Mode
 
-Browser userscript to enable dark mode on Rebrickable regardless of your account plan.
+Browser [userscript](https://en.wikipedia.org/wiki/Userscript) to enable dark mode on rebrickable.com regardless of your account plan.
 
 ## Problem
 
