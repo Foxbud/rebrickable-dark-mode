@@ -13,48 +13,69 @@
 (function () {
   'use strict';
 
-  // Callback function to enable dark mode on a given body element.
-  function enableDarkMode(body) {
-    // Apply dark mode CSS to body.
-    body.classList.add('dark-mode');
-
-    // Update state of dark mode toggle switch for consistency if it exists.
-    const checkbox = body.querySelector('.js-toggle-dark-mode input');
-    if (checkbox !== null) {
-      checkbox.checked = true;
-    }
-  }
-
-  // Given that this script is injected at document-start, the body element is
-  // unlikely to already be defined. However, just to account for potential
-  // differences between userscript managers and possible inconsistencies in
-  // the target website, also handle the case where the body is defined.
-  const body = document.querySelector('html > body');
-  if (body !== null) {
-    enableDarkMode(body);
-    return;
-  }
-
-  // If the body element does not exist (as expected), set up a
-  // MutationObserver to enable dark mode the moment the body element is
-  // added. This minimizes the time spent in light mode and (ideally) makes it
-  // appear as if the page was in dark mode from the start.
-  new MutationObserver(function (mutationList, observer) {
-    for (const mutation of mutationList) {
-      for (const node of mutation.addedNodes) {
-        // Enable dark mode if the node is the body element.
-        if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BODY') {
-          enableDarkMode(node);
-
-          // Observer has served its purpose, so disconnect it.
-          observer.disconnect();
-          return;
-        }
+  // Call callback on the child element of parent that passes predicate.
+  // If no children pass predicate, attach a MutationObserver to parent
+  // that waits until an added child passes predicate and call callback
+  // on it.
+  function callOnceChildExists(parent, predicate, callback) {
+    // First check if the target child element already exists.
+    for (const child of parent.childNodes.values()) {
+      if (child.nodeType === Node.ELEMENT_NODE && predicate(child)) {
+        // If it does, call callback on it and return early.
+        callback(child);
+        return;
       }
     }
-  }).observe(document.documentElement /* Root html node. */, {
-    // Only interested in modifications to immediate child list,
-    // not attributes or sub-children.
-    childList: true,
-  });
+
+    // If the target child element doesn't already exist, attach a
+    // MutationObserver that waits for it to be added.
+    new MutationObserver((mutationList, observer) => {
+      for (const mutation of mutationList) {
+        for (const child of mutation.addedNodes) {
+          if (child.nodeType === Node.ELEMENT_NODE && predicate(child)) {
+            callback(child);
+
+            // Observer has served its purpose, so disconnect it.
+            observer.disconnect();
+            return;
+          }
+        }
+      }
+    }).observe(parent, {
+      // Only interested in modifications to immediate child list,
+      // not attributes or sub-children.
+      childList: true,
+    });
+  }
+
+  // Body element may or may not already exist at this point,
+  // so use callOnceChildExists.
+  callOnceChildExists(
+    // Target element is the body element of the root HTML element.
+    document.documentElement,
+    (child) => child.tagName === 'BODY',
+
+    // Callback function to enable dark mode on a given body element.
+    (body) => {
+      // Apply dark mode CSS to body.
+      body.classList.add('dark-mode');
+
+      // Wrapper element inside body may or may not already exist at this
+      // point, so use callOnceChildExists.
+      callOnceChildExists(
+        // Target element is the child of body with id "wrapper".
+        body,
+        (child) => child.id === 'wrapper',
+
+        // Callback function to update state of dark mode toggle switch for
+        // consistency if it exists.
+        (wrapper) => {
+          const checkbox = wrapper.querySelector('.js-toggle-dark-mode input');
+          if (checkbox !== null) {
+            checkbox.checked = true;
+          }
+        },
+      );
+    },
+  );
 })();
