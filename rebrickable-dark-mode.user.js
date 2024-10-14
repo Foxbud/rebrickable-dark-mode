@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Rebrickable Dark Mode
 // @namespace    https://fairburn.dev/
-// @version      1.3.1
+// @version      1.3.2
 // @description  Enable dark mode on rebrickable.com regardless of your account plan.
 // @author       Garrett Fairburn
 // @license      Apache-2.0
